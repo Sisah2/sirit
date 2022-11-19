@@ -11,15 +11,11 @@
 
 namespace Sirit {
 
-Id Module::Name(Id target, std::string_view name) {
-    debug->Reserve(3 + WordsInString(name));
-    *debug << spv::Op::OpName << target << name << EndOp{};
+Id Module::Name(Id target, std::string_view) {
     return target;
 }
 
-Id Module::MemberName(Id type, u32 member, std::string_view name) {
-    debug->Reserve(4 + WordsInString(name));
-    *debug << spv::Op::OpMemberName << type << member << name << EndOp{};
+Id Module::MemberName(Id type, u32 , std::string_view ) {
     return type;
 }
 

@@ -1,0 +1,53 @@
+diff --git a/include/sirit/sirit.h b/include/sirit/sirit.h
+index 185568f..59496b8 100644
+--- a/include/sirit/sirit.h
++++ b/include/sirit/sirit.h
+@@ -1164,6 +1164,8 @@ public:
+     /// group xor'ed with mask.
+     Id OpGroupNonUniformShuffleXor(Id result_type, Id scope, Id value, Id mask);
+ 
++    Id OpGroupNonUniformShuffle(Id result_type, Id scope, Id value, Id id);
++
+     /// Evaluates a predicate for all active invocations in the group, resulting in
+     /// true if predicate evaluates to true for all active invocations in the
+     /// group, otherwise the result is false.
+diff --git a/src/instructions/debug.cpp b/src/instructions/debug.cpp
+index 1ca3462..c98aa70 100644
+--- a/src/instructions/debug.cpp
++++ b/src/instructions/debug.cpp
+@@ -11,15 +11,11 @@
+ 
+ namespace Sirit {
+ 
+-Id Module::Name(Id target, std::string_view name) {
+-    debug->Reserve(3 + WordsInString(name));
+-    *debug << spv::Op::OpName << target << name << EndOp{};
++Id Module::Name(Id target, std::string_view) {
+     return target;
+ }
+ 
+-Id Module::MemberName(Id type, u32 member, std::string_view name) {
+-    debug->Reserve(4 + WordsInString(name));
+-    *debug << spv::Op::OpMemberName << type << member << name << EndOp{};
++Id Module::MemberName(Id type, u32 , std::string_view ) {
+     return type;
+ }
+ 
+diff --git a/src/instructions/group.cpp b/src/instructions/group.cpp
+index 71ec8c9..904a571 100644
+--- a/src/instructions/group.cpp
++++ b/src/instructions/group.cpp
+@@ -48,6 +48,13 @@ Id Module::OpGroupNonUniformShuffleXor(Id result_type, Id scope, Id value, Id ma
+                  << mask << EndOp{};
+ }
+ 
++Id Module::OpGroupNonUniformShuffle(Id result_type, Id scope, Id value, Id id) {
++    code->Reserve(6);
++    return *code << OpId{spv::Op::OpGroupNonUniformShuffle, result_type} << scope << value << id
++                  << EndOp{};
++}
++
++
+ Id Module::OpGroupNonUniformAll(Id result_type, Id scope, Id predicate) {
+    code->Reserve(5);
+    return *code << OpId{spv::Op::OpGroupNonUniformAll, result_type} << scope << predicate << EndOp{};

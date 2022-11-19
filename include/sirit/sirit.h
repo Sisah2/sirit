@@ -1164,6 +1164,8 @@ public:
     /// group xor'ed with mask.
     Id OpGroupNonUniformShuffleXor(Id result_type, Id scope, Id value, Id mask);
 
+    Id OpGroupNonUniformShuffle(Id result_type, Id scope, Id value, Id id);
+
     /// Evaluates a predicate for all active invocations in the group, resulting in
     /// true if predicate evaluates to true for all active invocations in the
     /// group, otherwise the result is false.
